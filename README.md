@@ -1,36 +1,36 @@
-# 🖥️ TouchUI — 7" Secondary Display System Dashboard & Controller
+# TouchUI: Secondary Display System Dashboard & Controller
 
-TouchUI is a modern, custom-built hardware control deck and sensor dashboard designed specifically for secondary displays (like a 7-inch 1024x600 monitor inside or next to a PC case). It integrates low-level Windows APIs with a responsive web dashboard to provide system monitoring, application launch control, a per-app volume mixer, and system media integration.
-
----
-
-## ✨ Features
-
-* **📈 Live System Stats**: Real-time monitoring of CPU and RAM utilization.
-* **🚀 Quick Launch & Window Auto-Fitting**: Launch apps like Discord, TradingView, Spotify, or YouTube (as an Edge PWA app) with one tap. TouchUI automatically detects the window, strips its title borders (`WS_THICKFRAME`), and positions/resizes it to perfectly fit the secondary screen.
-* **🎛️ Per-App Volume Mixer**: A complete control panel to adjust master volume and individual application audio sessions (e.g., lower game volume while keeping Discord loud) powered by Windows WASAPI.
-* **🎵 System Media Deck**: Real-time media playback display (track title, artist, play status) and controls (Play/Pause, Skip, Previous) using Windows WinRT media integration. Includes a custom **source switcher** to toggle controls between active media sources (e.g., Spotify vs. Edge/Chrome).
-* **🏠 Floating 'Home' Overlay**: An always-on-top, borderless Tkinter-based overlay widget positioned at the bottom-right corner of the secondary screen. A single tap minimizes other windows on the screen and restores focus back to the TouchUI dashboard.
+TouchUI is a custom system dashboard and control deck designed specifically for secondary displays, such as a 7-inch 1024x600 monitor mounted inside or alongside a PC case. It integrates low-level Windows APIs with a responsive web interface to provide real-time system monitoring, application launch control, a per-application volume mixer, and global system media integration.
 
 ---
 
-## 🛠️ Tech Stack
+## Features
 
-### Backend (`/backend`)
+* **System Resource Monitoring**: Real-time tracking of CPU and RAM utilization.
+* **Quick Launch and Window Fitting**: Launch applications like Discord, TradingView, Spotify, or YouTube (via Microsoft Edge in App mode) with a single tap. TouchUI automatically detects the newly created window, strips its borders (removes `WS_THICKFRAME`), and positions it to fill the secondary display.
+* **Application-Specific Volume Mixer**: Fine-grained volume control panel to adjust the master system volume and individual active audio sessions independently (e.g., lowering game volume while maintaining communication volume) powered by Windows WASAPI.
+* **System Media Controller**: Real-time media playback status display (track title, artist, playback state) and control (play/pause, skip, previous) using the Windows Runtime (WinRT) API. Includes a source switcher to cycle focus between different active media applications.
+* **Home Button Overlay**: An always-on-top, borderless Tkinter-based overlay widget positioned at the bottom-right corner of the secondary screen. Activating it minimizes any open windows on that screen and returns focus back to the TouchUI web dashboard.
+
+---
+
+## Tech Stack
+
+### Backend (/backend)
 * **Python & FastAPI**: Lightweight web server hosting the control API.
-* **Windows Win32 APIs (via `ctypes`)**: Low-level window manipulation (positioning, border stripping, bringing windows to foreground, thread input attachment) and cursor state restoration.
-* **PyCaw (Python Common Audio Windows)**: Controls system master volume and active Windows Audio Session API (WASAPI) application levels.
-* **WinRT (Windows Runtime API)**: Taps into the `GlobalSystemMediaTransportControlsSessionManager` to read metadata and direct playback controls for system media players.
-* **Tkinter**: Powers the lightweight, borderless desktop overlay widget that acts as an always-on-top Home button.
+* **Windows Win32 APIs (via ctypes)**: Handles window positioning, border stripping, foreground management, and cursor state restoration.
+* **PyCaw (Python Common Audio Windows)**: Communicates with Windows WASAPI to adjust master volume and individual active application audio levels.
+* **WinRT (Windows Runtime API)**: Queries the `GlobalSystemMediaTransportControlsSessionManager` to read metadata and direct playback controls for system media players.
+* **Tkinter**: Powers the lightweight, borderless desktop overlay widget that acts as the always-on-top Home button.
 
-### Frontend (`/frontend`)
+### Frontend (/frontend)
 * **React 19 & TypeScript**: Component-based application framework.
-* **Vite**: Ultra-fast build tool and development server.
-* **Vanilla CSS**: Premium dark-mode dashboard styling custom-tailored for 1024x600 aspect ratios.
+* **Vite**: Build tool and development server.
+* **Vanilla CSS**: Custom styling optimized for 1024x600 aspect ratios.
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 TouchUI/
@@ -41,7 +41,7 @@ TouchUI/
 ├── frontend/
 │   ├── src/
 │   │   ├── App.tsx        # Dashboard component logic
-│   │   ├── App.css        # Premium custom styling
+│   │   ├── App.css        # Dashboard custom styling
 │   │   └── icons.tsx      # SVG icons for the dashboard
 │   ├── index.html
 │   └── package.json
@@ -51,10 +51,10 @@ TouchUI/
 
 ---
 
-## 🚀 Setup & Installation
+## Setup and Installation
 
 ### 1. Identify Your Secondary Display Coordinates
-TouchUI needs to know the exact coordinates of your secondary screen on your Windows desktop grid.
+TouchUI requires the precise coordinates of your secondary screen on your Windows desktop grid.
 1. Navigate to the backend directory:
    ```bash
    cd backend
@@ -63,22 +63,21 @@ TouchUI needs to know the exact coordinates of your secondary screen on your Win
    ```bash
    python get_monitors.py
    ```
-3. Take note of the **X Offset (Left)**, **Y Offset (Top)**, and **Resolution** of your 7-inch display.
+3. Record the **X Offset (Left)**, **Y Offset (Top)**, and **Resolution** of your secondary display.
 
-### 2. Configure Coordinates & Quick Launch Paths
-Open [backend/main.py](file:///c:/Users/HrakosCZ/Downloads/TouchUI/backend/main.py) and update the target screen parameters:
+### 2. Configure Coordinates and Launch Paths
+Open `backend/main.py` and update the target screen parameters:
 ```python
 TARGET_X = 3840  # Replace with your secondary monitor's X Offset
 TARGET_Y = 0     # Replace with your secondary monitor's Y Offset
 TARGET_W = 1024  # Replace with your secondary monitor's Width
 TARGET_H = 600   # Replace with your secondary monitor's Height
 ```
-You can also adjust the application executable paths in the `apps` dictionary in [backend/main.py](file:///c:/Users/HrakosCZ/Downloads/TouchUI/backend/main.py#L179-L204) to match where your apps are installed.
+You can also adjust the application executable paths in the `apps` dictionary in `backend/main.py` to match your local installation paths.
 
 ### 3. Install Python Backend Dependencies
-We recommend using a virtual environment:
+We recommend setting up a virtual environment:
 ```bash
-# From the root directory
 python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
@@ -92,13 +91,12 @@ npm install
 
 ---
 
-## 🏃 Running the Application
+## Running the Application
 
-For a fully integrated experience, you will run the backend, the overlay button, and the web app:
+For a fully integrated experience, run the backend, the overlay button, and the web application:
 
 1. **Start the Backend Server**:
    ```bash
-   # In venv
    cd backend
    python main.py
    ```
@@ -106,11 +104,10 @@ For a fully integrated experience, you will run the backend, the overlay button,
 
 2. **Start the Tkinter Home Overlay**:
    ```bash
-   # In venv
    cd backend
    python overlay.py
    ```
-   This will create a small, translucent house icon in the bottom right corner of your secondary display.
+   This initializes the translucent home icon in the bottom right corner of your secondary display.
 
 3. **Start the Frontend Dashboard**:
    ```bash
@@ -124,8 +121,8 @@ For a fully integrated experience, you will run the backend, the overlay button,
 
 ---
 
-## 🎨 Customization
+## Customization
 
 ### Adding New Quick Launch Apps
-1. **Backend**: Add your application entry to the `apps` dictionary in [backend/main.py](file:///c:/Users/HrakosCZ/Downloads/TouchUI/backend/main.py#L179-L204) specifying the launch command and how the window should be located (`find_by: "process" | "title"`).
+1. **Backend**: Add your application entry to the `apps` dictionary in `backend/main.py`, specifying the launch command and how the window should be located (`find_by: "process" | "title"`).
 2. **Frontend**: Add a button corresponding to the backend launch ID inside `App.tsx` and render the appropriate icon.
